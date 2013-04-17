@@ -174,7 +174,7 @@ class EpuckBasic (DifferentialWheels):
 # method is now just used as support for the spin_cw and spin_ccw methods
  
   def spin(self, speed = 1.0, dir = 'cw', duration = 1):
-      s = int(min(1.0,abs(speed))*self.tempo*self.max_wheel_speed)
+      s = speed #int(min(1.0,abs(speed))*self.tempo*self.max_wheel_speed)
       if dir == 'ccw':
 	    self.set_wheel_speeds(left = -s, right = s)
       elif dir == 'cw':
