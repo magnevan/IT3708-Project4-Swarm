@@ -1,17 +1,23 @@
+import random
 import epuck_basic as epb
+from search import Search
+from retrival import Retrival
+from stagnation import Stagnation
 
-# The webann is a descendent of the webot "controller" class, and it has the ANN as an attribute.
+R = random.Random(0x42)
 
 class Botty(epb.EpuckBasic):
-
     def __init__(self):
         epb.EpuckBasic.__init__(self)
         self.basic_setup() # defined for EpuckBasic
-    
 
-#*** MAIN ***
-# Webots expects a controller to be created and activated at the bottom of the controller file.
+    def run(self):
+        while True:
+            R.choice([
+                self.turn_left,
+                self.turn_right,
+            ])()
+            print 'Proximities', self.get_proximities()
 
 controller = Botty()
-#controller.spin_cw(duration=20, speed=1)
-controller.forward(duration=5)
+controller.run()

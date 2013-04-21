@@ -1,9 +1,7 @@
-
-
-class Search:
+class Search(object):
     COUNTLIMIT = 20
     counter = COUNTLIMIT
-    
+
     left_wheel_speed = 0
     right_wheel_speed = 0
 
@@ -28,7 +26,7 @@ class Search:
              (1,1,0,1):(1,0),
              (1,1,1,0):(0,1),
              (1,1,1,1):(0,1)}
-    
+
     '''
     Internal functions
     '''
@@ -56,13 +54,13 @@ class Search:
         elif motor == (0,1):
             left_wheel_speed = 700
             right_wheel_speed = -300
-        
+
 
     # Calculate if there is an obstacle or not, depending on the threshold
     def calculate_treshold(sensors, distance_threshold):
         threshold_list = map(lambda x: x < distance_threshold, sensors)
         calculate_search_speed(threshold_list)
-    
+
     '''
     External functions
     '''
@@ -71,5 +69,5 @@ class Search:
     def update_search_speed(sensor_value, distance_threshold):
         sv = sensor_value
         calculate_threshold([sv[6], sv[7], sv[0], sv[1]], distance_threshold)
-    
-    
+
+

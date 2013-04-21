@@ -1,13 +1,11 @@
-class Stagnation:
-    from random import 
-    
+class Stagnation(object):
     IR_DIFF_THRESHOLD = 4
     DISTANCE_DIFF_THRESHOLD = 10
     REVERSE_LIMIT  =20
     TURN_LIMIT = 10
     FORWARD_LIMIT = 40
     NEIGHBOR_LIMIT = 300
-    
+
     left_wheel_speed = 0
     right_wheel_speed = 0
 
@@ -25,8 +23,8 @@ class Stagnation:
     forward_counter = 0
     twice = 0
     align_counter = 0
-    
-    
+
+
     '''
     Internal functions
     '''
@@ -69,10 +67,10 @@ class Stagnation:
 
         has_recovered = True
         green_LED_state = False
-            
 
-        
-        
+
+
+
 
     '''
     External functions
@@ -114,7 +112,7 @@ class Stagnation:
 
             if min(left_wheel_speed, right_wheel_speed) > 0:
                 left_wheel_speed = right_wheel_speed = 1000
-            
+
 
     def reset_stagnation():
         has_recovered = FALSE
@@ -136,13 +134,16 @@ class Stagnation:
     def valuate_pushing(distances, prev_distances):
         diff = [abs(i - j) for i, j in zip(prev_distances, distances)]
 
-        if min((diff[0], diff[7])) > DISTANCE_DIFF_THRESHOLD \ # We are moving
-           or min((distances[5], distances[2])) > NEIGHBOR_LIMIT \ # We trust our neighbors
-           or (max((distances[5], distances[2])) > NEIGHBOR_LIMIT and flip()): # We take a chance
+        # We are moving
+        # We trust our neighbors
+        # We take a chance
+        if min((diff[0], diff[7])) > DISTANCE_DIFF_THRESHOLD \
+           or min((distances[5], distances[2])) > NEIGHBOR_LIMIT \
+           or (max((distances[5], distances[2])) > NEIGHBOR_LIMIT and flip()):
             has_recovered = True # Keep pushing, it is working
             green_LED_state = False # No more recovery
             align_counter = 0
-        
+
 
     # Return the boolean value of whether or not to continue with this behavior
     def get_stagnation_state():
