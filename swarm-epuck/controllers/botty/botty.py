@@ -1,8 +1,8 @@
 import random
 import epuck_basic as epb
-from search import SearchBehavior
-from retrival import RetrivalBehavior
-from stagnation import StagnationBehavior
+from search import SearchLayer
+from retrival import RetrivalLayer
+from stagnation import StagnationLayer
 
 
 class Botty(epb.EpuckBasic):
@@ -10,11 +10,10 @@ class Botty(epb.EpuckBasic):
         super(Botty, self).__init__()
         self.basic_setup()
 
-        # XXX TODO s/Behavior/Layer in all files
         self._layers = [
-            SearchBehavior(),
-            RetrivalBehavior(),
-            StagnationBehavior(),
+            SearchLayer(),
+            RetrivalLayer(),
+            StagnationLayer(),
         ]
 
     def run(self):
@@ -22,12 +21,13 @@ class Botty(epb.EpuckBasic):
             self._tick()
 
     def _tick(self):
-        #proximity_sensors = self.get_proximities()
-        inputs = light_sensors = self.get_lights()
-        print inputs
+        proximities = self.get_proximities()
+        lights = self.get_lights()
+        acceleration = self.get_accelleration()
 
         # Run all layers
-        layer_actions = [layer.act(inputs) for layer in self._layers]
+        layer_actions = [layer.act(proximities, lights, acceleration)
+                         for layer in self._layers]
 
         # Chose output action
         output = None
@@ -39,8 +39,8 @@ class Botty(epb.EpuckBasic):
         self._report_actions(layer_actions)
 
     def _report_actions(self, layer_actions):
-        debug_str = '|'.join([
-            '(%-.2f, %-.2f,)%s' % (
+        debug_str = '    '.join([
+            '[%-8.2f %-8.2f %-7s]' % (
                 left, right,
                 'SUPRESS' if should_supress else '',
             )

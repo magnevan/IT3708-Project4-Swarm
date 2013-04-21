@@ -1,14 +1,15 @@
-from behavior import Behavior
+from layer import Layer
 
 
 
-class StagnationBehavior(Behavior):
-    def act(self, inputs):
+class StagnationLayer(Layer):
+    def act(self, proximities, lights, acceleration):
         should_supress = False
         return (0, 0,), should_supress
 
 
 
+"""
 class Stagnation(object):
     IR_DIFF_THRESHOLD = 4
     DISTANCE_DIFF_THRESHOLD = 10
@@ -156,6 +157,7 @@ class Stagnation(object):
             align_counter = 0
 
 
-    # Return the boolean value of whether or not to continue with this behavior
+    # Return the boolean value of whether or not to continue with this layer
     def get_stagnation_state():
         return not has_recovered
+"""

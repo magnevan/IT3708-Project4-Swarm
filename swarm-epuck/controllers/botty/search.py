@@ -1,4 +1,4 @@
-from behavior import Behavior
+from layer import Layer
 import random
 R = random.Random(0x42)
 
@@ -8,21 +8,21 @@ DIST_THRESH = 10
 # How quickly we allow the speed to change
 SP_CHANGE = 0.05
 
-class SearchBehavior(Behavior):
+class SearchLayer(Layer):
     motor = [R.uniform(.5,1.0), R.uniform(.5,1.0)]
-       
-    def find_speed(self, inputs):
+
+    def find_speed(self):
         # Random walk
         if R.random() < 0.01:
             self.motor = (-1,1) if R.getrandbits(1) else (1,-1)
         else:
             self.motor = [R.uniform(.5,1.0), R.uniform(.5,1.0)]
-        
+
         return self.motor
-            
-    def act(self, inputs):
+
+    def act(self, proximities, lights, acceleration):
         should_supress = False
-        return self.find_speed(inputs), should_supress
+        return self.find_speed(), should_supress
 
 """
 class Search(object):

@@ -152,7 +152,6 @@ class EpuckBasic (DifferentialWheels):
 # The arguments "left" and "right" are in the range [-1,1].
 
   def set_wheel_speeds(self,left = 0.0, right = 0.0):
-      print "Setting wheel speeds: ", "Left =", left ,"  Right = ", right
       ms = self.tempo*self.max_wheel_speed
       self.setSpeed(int(left*ms),int(right*ms))
 
@@ -225,8 +224,8 @@ class EpuckBasic (DifferentialWheels):
 	  self.light_sensor_values[i] = self.light_sensors[i].getValue()
       return self.light_sensor_values
 
-# Returns x, y, z. We only care about x and y, z is always 9.81      
-  def get_accelerometer(self):
+# Returns x, y, z. We only care about x and y, z is always 9.81
+  def get_accelleration(self):
       return self.accelerometer.getValues()
 
 
