@@ -1,16 +1,34 @@
 from behavior import Behavior
+import random
+R = random.Random(0x42)
 
+# How close we need to be before we consider it noticable
+DIST_THRESH = 10
 
+# How quickly we allow the speed to change
+SP_CHANGE = 0.05
 
 class SearchBehavior(Behavior):
+    motor = [R.uniform(.5,1.0), R.uniform(.5,1.0)]
+        
+    def find_speed(self, inputs):
+        # Are we close to hitting anything?
+        if any(x < DIST_THRESH for x in inputs[:2] + inputs[6:]):
+            # Avoid
+            rs, ls = sum(inputs[:4]), sum(inputs[4:])
+            tot = rs+ls
+            return (rs/tot, ls/tot)
+        else:
+            # Change speed slightly
+            self.motor[0] = min(1.0, max(0.0,self.motor[0] + R.uniform(-SP_CHANGE,+SP_CHANGE)))
+            self.motor[1] = min(1.0, max(0.0,self.motor[1] + R.uniform(-SP_CHANGE,+SP_CHANGE)))
+            return self.motor
+            
     def act(self, inputs):
         should_supress = False
-        return (-.5, .5,), should_supress
+        return self.find_speed(inputs), should_supress
 
-
-
-
-
+"""
 class Search(object):
     COUNTLIMIT = 20
     counter = COUNTLIMIT
@@ -83,4 +101,4 @@ class Search(object):
         sv = sensor_value
         calculate_threshold([sv[6], sv[7], sv[0], sv[1]], distance_threshold)
 
-
+"""
