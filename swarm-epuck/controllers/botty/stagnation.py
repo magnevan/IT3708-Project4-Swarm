@@ -1,3 +1,14 @@
+from behavior import Behavior
+
+
+
+class StagnationBehavior(Behavior):
+    def act(self, inputs):
+        should_supress = False
+        return (0, 0,), should_supress
+
+
+
 class Stagnation(object):
     IR_DIFF_THRESHOLD = 4
     DISTANCE_DIFF_THRESHOLD = 10

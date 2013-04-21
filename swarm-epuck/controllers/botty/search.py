@@ -1,3 +1,16 @@
+from behavior import Behavior
+
+
+
+class SearchBehavior(Behavior):
+    def act(self, inputs):
+        should_supress = False
+        return (-.5, .5,), should_supress
+
+
+
+
+
 class Search(object):
     COUNTLIMIT = 20
     counter = COUNTLIMIT

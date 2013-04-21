@@ -1,3 +1,14 @@
+from behavior import Behavior
+
+
+
+class RetrivalBehavior(Behavior):
+    def act(self, inputs):
+        should_supress = False
+        return (0, 0,), should_supress
+
+
+
 class Retrival:
     PUSH_THRESHOLD = 500
 
@@ -9,7 +20,7 @@ class Retrival:
     '''
     Internal functions
     '''
-    
+
     def update_speed(IR_number):
         cases = {0:(700,0),
                  1:(350,0),
@@ -32,7 +43,7 @@ class Retrival:
             if val < IR_threshold:
                 LED[i] = True
                 update_speed(i)
-        
+
 
     # The behavior when pushing the box
     def push_box(IR_sensors, IR_threshold):
@@ -47,7 +58,7 @@ class Retrival:
         else:
             # Update speeds for all triggering sensors
             (update_speed(i) for i,v in enumerate(IR_sensors) if v < IR_threshold)
-        
+
 
     # Selects the behavior push or converge
     def select_behavior(IR_sensors):
