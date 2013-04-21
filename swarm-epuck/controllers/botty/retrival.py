@@ -1,11 +1,21 @@
+import random
 from behavior import Behavior
 
 
 
 class RetrivalBehavior(Behavior):
+    """
+    Currently just doing some random shit.
+    """
+
+    def __init__(self):
+        super(RetrivalBehavior, self).__init__()
+        self._t = random.randint(0, 20)
+
     def act(self, inputs):
-        should_supress = False
-        return (0, 0,), should_supress
+        self._t += 1
+        should_supress = self._t % 20 < 5
+        return (-1, -1,), should_supress
 
 
 
