@@ -264,8 +264,71 @@ Solid {
   ]
   boundingObject USE WALL_SHAPE
 }
-DEF E_PUCK EPuck {
+DEF E_PUCK1 EPuck {
   translation 0.2 0 0.25
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK2 EPuck {
+  translation 0.2 0 0.35
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK3 EPuck {
+  translation 0.3 0 0.35
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK4 EPuck {
+  translation 0.3 0 0.25
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK5 EPuck {
+  translation 0.2 0 0.45
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK6 EPuck {
+  translation 0.2 0 0.55
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK7 EPuck {
+  translation 0.3 0 0.55
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK8 EPuck {
+  translation 0.3 0 0.45
   rotation 0 1 0 1.57
   controller "botty"
   name "e-puck camera"
