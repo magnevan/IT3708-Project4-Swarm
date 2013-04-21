@@ -77,20 +77,17 @@ DEF short_rock_6 Solid {
   scale 1.7 1.7 1.7
   children [
     PointLight {
-      attenuation 0.02 0.02 0.02
+      attenuation 0.001 0.001 0.01
       castShadows TRUE
+      intensity 0.01
+      ambientIntensity 0
     }
     Shape {
       appearance Appearance {
         material Material {
           diffuseColor 0 0.0980392 0.0117647
-          emissiveColor 0.984314 1 0.972549
-          specularColor 1 0.984314 0.968627
-        }
-        texture ImageTexture {
-          url [
-            ""
-          ]
+          emissiveColor 0.8 0.1 0.2
+          specularColor 1 0 0
         }
       }
       geometry DEF short_brick_1_geometry Box {
@@ -102,7 +99,7 @@ DEF short_rock_6 Solid {
   boundingObject USE short_brick_1_geometry
   physics Physics {
     density -1
-    mass 0.01
+    mass 0.05
   }
 }
 Solid {
@@ -144,9 +141,36 @@ Solid {
   ]
   boundingObject USE WALL_SHAPE
 }
-DEF E_PUCK8 EPuck {
+DEF E_PUCK1 EPuck {
   translation -0.318565 -0.000163967 0.221703
   rotation 2.97673e-06 1 8.95972e-07 2.55686
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK2 EPuck {
+  translation 0.2 0 0.35
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK3 EPuck {
+  translation 0.3 0 0.35
+  rotation 0 1 0 1.57
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK4 EPuck {
+  translation 0.3 0 0.25
+  rotation 0 1 0 1.57
   controller "botty"
   name "e-puck camera"
   camera_windowPosition 0.75 0.75

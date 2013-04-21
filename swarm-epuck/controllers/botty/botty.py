@@ -22,7 +22,9 @@ class Botty(epb.EpuckBasic):
             self._tick()
 
     def _tick(self):
-        inputs = self.get_proximities()
+        #proximity_sensors = self.get_proximities()
+        inputs = light_sensors = self.get_lights()
+        print inputs
 
         # Run all layers
         layer_actions = [layer.act(inputs) for layer in self._layers]

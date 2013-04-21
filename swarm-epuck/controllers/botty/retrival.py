@@ -2,8 +2,8 @@ import random
 from behavior import Behavior
 
 
-RETRIVAL_THRESHOLD =   200
-PUSH_THRESHOLD     =  2000
+RETRIVAL_THRESHOLD =  1500
+PUSH_THRESHOLD     =  3500
 
 
 
@@ -14,24 +14,19 @@ class RetrivalBehavior(Behavior):
 
     def __init__(self):
         super(RetrivalBehavior, self).__init__()
-        self._t = random.randint(0, 20)
 
     def act(self, inputs):
-        highest_intensity = max(inputs)
+        lowest_intensity = min(inputs)
 
-        should_retrive = highest_intensity >= RETRIVAL_THRESHOLD
+        should_retrive = lowest_intensity <= RETRIVAL_THRESHOLD
         if not should_retrive:
             return (0, 0,), False
 
-        print inputs
-
-        #max_off_input = max(inputs[1:])
-        should_push = (inputs[0] >= PUSH_THRESHOLD and
-                       inputs[1] >= PUSH_THRESHOLD)
+        should_push = all(inputs[i] < PUSH_THRESHOLD for i in (6, 7, 0, 1,))
 
         if should_push:
             output = 1, 1
         else:
-            output = .5, 0
+            output = .3, -.3
 
         return output, True

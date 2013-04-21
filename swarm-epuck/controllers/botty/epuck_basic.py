@@ -7,7 +7,7 @@ import imagepro            # A module provided by Keith Downing for this assignm
 
 # This is the basic class for controlling an epuck robot in the Webots simulator.  In theory, the
 # same code can also run a physical epuck robot with just the "flip of a switch" - although there are small
-# differences.  
+# differences.
 
 # The class hierarchy is Robot => DifferentialWheels => epuck_basic, where the superclass, Robot, and
 # DifferentialWheels are written by the Webots people, while we defined epuck_basic.  By inheriting
@@ -27,13 +27,14 @@ class EpuckBasic (DifferentialWheels):
 
   max_wheel_speed = 1000
   num_dist_sensors = 8
+  num_light_sensors = 8
   encoder_resolution = 159.23 # for wheel encoders
-  tempo = 0.5  # Upper velocity bound = Fraction of the robot's maximum velocity = 1000 = 1 wheel revolution/sec  
+  tempo = 0.5  # Upper velocity bound = Fraction of the robot's maximum velocity = 1000 = 1 wheel revolution/sec
   wheel_diameter = 4.1 # centimeters
   axle_length = 5.3 # centimeters
 
 # Final 4 slots not used in Webots but included for use with physical epucks that are not driven by Webots.
-  max_spin_rate = tempo * (wheel_diameter / axle_length) 
+  max_spin_rate = tempo * (wheel_diameter / axle_length)
   robot_camera_xres = 40 # Need to save X and Y resolution for the epuck camera
   robot_camera_yres = 40
   timestep_duration = 1 # Real-time seconds per timestep
@@ -52,8 +53,11 @@ class EpuckBasic (DifferentialWheels):
       self.dist_sensor_values = [0 for i in range(self.num_dist_sensors)]
       self.dist_sensors = [self.getDistanceSensor('ps'+str(x)) for x in range(self.num_dist_sensors)]  # distance sensors
       map((lambda s: s.enable(self.timestep)), self.dist_sensors) # Enable all distance sensors
+      self.light_sensor_values = [0 for i in range(self.num_dist_sensors)]
+      self.light_sensors = [self.getLightSensor('ls'+str(x)) for x in range(self.num_light_sensors)]
+      map((lambda s: s.enable(self.timestep)), self.light_sensors)
 
- 
+
 # **** TIMED ACTION ***
 
 # The routines do_timed_action and run_timestep are explicit commands to the robot to actually DO
@@ -92,7 +96,7 @@ class EpuckBasic (DifferentialWheels):
   def wait(self, seconds = 1.0):
       print "waiting"
       time.sleep(seconds)
-   
+
 
 # *****  Basic Movement Routines ****
 
@@ -105,10 +109,10 @@ class EpuckBasic (DifferentialWheels):
 # actual wheel speeds by set_wheel_speeds prior to it's call to the Webots primitive "setSpeed".
 
 
-  def forward(self,speed=1.0,duration = 1.0):
+  def forward(self, speed=1.0, duration = 0.1):
       self.move(speed = speed, duration = duration, dir = 'forward')
 
-  def backward(self,speed=1.0,duration = 1.0):
+  def backward(self, speed=1.0, duration = 0.1):
       self.move(speed = speed, duration = duration, dir = 'backward')
 
 # This could have been named "translate", as it causes the robot to
@@ -118,7 +122,7 @@ class EpuckBasic (DifferentialWheels):
 # relevant the NEXT TIME the epuck is asked to run a timestep.  We force that
 # running via the call to do_timed_action.
 
-  def move(self,speed=1.0,duration =1.0, dir = 'forward'):
+  def move(self, speed=1.0, duration=0.1, dir = 'forward'):
       print "Moving"
       s = min(1.0, abs(speed))
       if dir == 'forward':
@@ -130,9 +134,9 @@ class EpuckBasic (DifferentialWheels):
 # A version of move that takes the two wheel speeds (between -1 and 1) as basis.  This
 # version permits turning, since both wheel speeds can be specified independently.
 
-  def move_wheels(self, left = 0.0, right = 0.0, duration = 1.0):
-      ls = max(-1.0, min(1.0, left)) 
-      rs = max(-1.0, min(1.0, right)) 
+  def move_wheels(self, left = 0.0, right = 0.0, duration = 0.1):
+      ls = max(-1.0, min(1.0, left))
+      rs = max(-1.0, min(1.0, right))
       self.set_wheel_speeds(left = ls, right = rs)
       self.do_timed_action(duration)
 
@@ -172,7 +176,7 @@ class EpuckBasic (DifferentialWheels):
 # for a given length of time.  In earlier versions of this code, we implemented spin_angle (below)
 # via calls to this timed-spin method, but now we use the wheel encoders.  So this
 # method is now just used as support for the spin_cw and spin_ccw methods
- 
+
   def spin(self, speed = 1.0, dir = 'cw', duration = 1):
       s = speed #int(min(1.0,abs(speed))*self.tempo*self.max_wheel_speed)
       if dir == 'ccw':
@@ -185,7 +189,7 @@ class EpuckBasic (DifferentialWheels):
 # positive, and clockwise being negative.
 # The angle must be converted to "encoder units" of the wheels, of which there are
 # RES per radians of wheel rotation, where RES is found in the "encoderResolution" slot of a differentialWheels object,
-# from which basic_epuck inherits.  A typical value for RES is around 150. 
+# from which basic_epuck inherits.  A typical value for RES is around 150.
 
   def spin_angle(self, angle):
       a = abs(angle)*math.pi/180.0
@@ -213,6 +217,13 @@ class EpuckBasic (DifferentialWheels):
       return self.dist_sensor_values
 
 
+### XXX BAD NAME
+  def get_lights(self):
+      for i in range(self.num_light_sensors):
+	  self.light_sensor_values[i] = self.light_sensors[i].getValue()
+      return self.light_sensor_values
+
+
 
 # This is the high-level routine for getting camera images; just call it directly from your code and
 # then prepare to deal with the "Image" object that it returns.  This is where you'll need Python's Image module.
@@ -228,7 +239,7 @@ class EpuckBasic (DifferentialWheels):
       return im
 
 # This is the lower-level method that calls Webots code to fetch the camera image (in the form of a big string)
-# and then converts the string to an Image object.  
+# and then converts the string to an Image object.
 
   def get_image(self):
       strImage=self.camera.getImage()
@@ -241,18 +252,18 @@ class EpuckBasic (DifferentialWheels):
 # loop that reads sensors, the camera, etc. and then performs some action.
 
   def continuous_run(self):
-    
+
     # Main loop
       while True:
           self.turn_left()
           self.get_proximities()
           # self.braitenburg_avoidance()
-      
-      
+
+
       # This runs a simulation step of duration 64 milliseconds (simulation time, not real time).
-      # The STEP method returns a -1 when the simulation is over. 
+      # The STEP method returns a -1 when the simulation is over.
 	  if self.step(64) == -1: break
-    
+
     # Enter here exit cleanup code
 
 # ****** Accessories ******
@@ -261,7 +272,7 @@ class EpuckBasic (DifferentialWheels):
   def testrun(self):
       self.run_toy()
       self.stop_moving()
-	  
+
 
   def braitenburg_avoidance(self):
       sv = self.dist_sensor_values
@@ -270,7 +281,7 @@ class EpuckBasic (DifferentialWheels):
       tot = sum1 + sum2
       self.set_wheel_speeds(sum1/tot, sum2/tot)
 
-# ***** Running in interpretive mode. *****************  
+# ***** Running in interpretive mode. *****************
 
 # When I start up Webots, I do it from a unix terminal shell.  That enables my
 # Python path information to be combined with Webot's pathes, PLUS it gives me
@@ -309,7 +320,7 @@ class EpuckBasic (DifferentialWheels):
 	  help += "   snap - Shows the camera image.\n"
 	  help += "   wait <duration in seconds> - robot does nothing for the specified period \n"
 	  help += "   quit - Quit this program.\n"
-	  print help 
+	  print help
       else:
 	  print "Unknown command"
       return True
@@ -320,7 +331,7 @@ class EpuckBasic (DifferentialWheels):
 # snapshots, etc.
 
   def run_action_script(self,fid = "action1"):
-      path = "data/" + fid + ".dat" 
+      path = "data/" + fid + ".dat"
       lines = load_file_lines(path)
       for l in lines:
 	  self.interp_command(l)
