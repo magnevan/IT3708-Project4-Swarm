@@ -21,15 +21,18 @@ class Botty(epb.EpuckBasic):
 
     def run(self):
         while True:
-            inputs = get_proximities()
+            self._tick()
 
-            output = None
-            for b in self._behaviors:
-                proposed_output, should_supress = b.act(inputs)
-                if output is None or should_supress:
-                    output = proposed_output
+    def _tick(self):
+        inputs = get_proximities()
 
-            self.move_wheels(*output)
+        output = None
+        for b in self._behaviors:
+            proposed_output, should_supress = b.act(inputs)
+            if output is None or should_supress:
+                output = proposed_output
+
+        self.move_wheels(*output)
 
 
 if __name__ == '__main__':
