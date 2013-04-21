@@ -9,18 +9,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.561567 0.77848 0.280378 1.11319
-  position 1.15945 1.05102 1.32111
-}
-PointLight {
-  ambientIntensity 0.5
-  intensity 0.6
-  location 0.14 0.6 -0.55
-  castShadows TRUE
-}
-PointLight {
-  ambientIntensity 0.5
-  intensity 0.6
-  location -0.43 0.6 0.5
+  position 1.18159 1.11418 1.21193
 }
 Background {
   skyColor [
@@ -86,6 +75,10 @@ DEF short_rock_6 Solid {
   translation 0 0.05 0.7
   rotation 0 1 0 5.36782
   children [
+    PointLight {
+      location 0 0.3 0
+      castShadows TRUE
+    }
     Shape {
       appearance Appearance {
         material Material {
@@ -106,6 +99,10 @@ DEF short_rock_6 Solid {
   ]
   name "short white brick"
   boundingObject USE short_brick_1_geometry
+  physics Physics {
+    density -1
+    mass 1
+  }
 }
 Solid {
   translation 1 0.05 0
