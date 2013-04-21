@@ -55,6 +55,8 @@ class EpuckBasic (DifferentialWheels):
       map((lambda s: s.enable(self.timestep)), self.dist_sensors) # Enable all distance sensors
       self.light_sensor_values = [0 for i in range(self.num_dist_sensors)]
       self.light_sensors = [self.getLightSensor('ls'+str(x)) for x in range(self.num_light_sensors)]
+      self.accelerometer = self.getAccelerometer('accelerometer')
+      self.accelerometer.enable(self.timestep)
       map((lambda s: s.enable(self.timestep)), self.light_sensors)
 
 
@@ -222,6 +224,10 @@ class EpuckBasic (DifferentialWheels):
       for i in range(self.num_light_sensors):
 	  self.light_sensor_values[i] = self.light_sensors[i].getValue()
       return self.light_sensor_values
+
+# Returns x, y, z. We only care about x and y, z is always 9.81      
+  def get_accelerometer(self):
+      return self.accelerometer.getValues()
 
 
 
