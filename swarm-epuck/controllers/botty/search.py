@@ -10,19 +10,15 @@ SP_CHANGE = 0.05
 
 class SearchBehavior(Behavior):
     motor = [R.uniform(.5,1.0), R.uniform(.5,1.0)]
-        
+       
     def find_speed(self, inputs):
-        # Are we close to hitting anything?
-        if any(x < DIST_THRESH for x in inputs[:2] + inputs[6:]):
-            # Avoid
-            rs, ls = sum(inputs[:4]), sum(inputs[4:])
-            tot = rs+ls
-            return (rs/tot, ls/tot)
+        # Random walk
+        if R.random() < 0.01:
+            self.motor = (-1,1) if R.getrandbits(1) else (1,-1)
         else:
-            # Change speed slightly
-            self.motor[0] = min(1.0, max(0.0,self.motor[0] + R.uniform(-SP_CHANGE,+SP_CHANGE)))
-            self.motor[1] = min(1.0, max(0.0,self.motor[1] + R.uniform(-SP_CHANGE,+SP_CHANGE)))
-            return self.motor
+            self.motor = [R.uniform(.5,1.0), R.uniform(.5,1.0)]
+        
+        return self.motor
             
     def act(self, inputs):
         should_supress = False
