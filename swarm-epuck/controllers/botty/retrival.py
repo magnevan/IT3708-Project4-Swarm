@@ -11,7 +11,7 @@ DIST_THRESH        =  1000
 PUSH_STRAIGHT = True
 
 class RetrivalLayer(Layer):
-    def act(self, proximities, lights, acceleration):
+    def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
         lowest_intensity = min(lights)
 
         should_retrive = lowest_intensity <= RETRIVAL_THRESHOLD
