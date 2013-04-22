@@ -3,7 +3,7 @@ from layer import Layer
 
 
 class StagnationLayer(Layer):
-    def act(self, proximities, lights, acceleration):
+    def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
         should_supress = False
         return (0, 0,), should_supress
 

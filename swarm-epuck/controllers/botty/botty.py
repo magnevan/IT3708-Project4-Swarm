@@ -25,9 +25,11 @@ class Botty(epb.EpuckBasic):
         lights = self.get_lights()
         acceleration = self.get_accelleration()
 
+        layer_actions = []
+
         # Run all layers
-        layer_actions = [layer.act(proximities, lights, acceleration)
-                         for layer in self._layers]
+        for layer in self._layers:
+            layer_actions.append(layer.act(proximities, lights, acceleration, layer_actions[-1][1] if len(layer_actions) > 0 else None))
 
         # Chose output action
         output = None
