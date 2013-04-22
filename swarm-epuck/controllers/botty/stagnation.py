@@ -1,13 +1,63 @@
 from layer import Layer
+import time
+import random
 
-
+BACKTRACK_AFTER_STAGNATION_FOR_MS = 2000
+TIME_REQUIRED_FOR_STAGNATION = 2000
+STAGNATION_ACCELERATION_THRESHOLD = 0.1
 
 class StagnationLayer(Layer):
+    stagnated_at = None
+    previous_accelerations = None
+    next_time_required_for_stagnation = None
+
+    def __init__(self):
+        self.stagnated_at = 0
+        self.previous_accelerations = []
+        self.next_time_required_for_stagnation = STAGNATION_ACCELERATION_THRESHOLD * (random.randint(1, 2) - 0.5)
+
     def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
-        should_supress = False
-        return (0, 0,), should_supress
+        current_time = time.time() * 1000
 
+        if not previous_layer_did_suppress:
+            self.previous_accelerations = []
 
+        if self.stagnated_at + BACKTRACK_AFTER_STAGNATION_FOR_MS < current_time:
+            print "Has not stagnated."
+            # Add the first two values of acceleration, together with the current time.
+            self.previous_accelerations.append((current_time, acceleration[0]))
+            self.previous_accelerations.append((current_time, acceleration[1]))
+
+            # See if we have data from 'TIME_REQUIRED_FOR_STAGNATION' ago and thus can determine whether or not we have stagnated.
+            if self._has_enough_data_to_determine_stagnation(self.previous_accelerations):
+                # Have we stagnated?
+                if self._has_stagnated(self.previous_accelerations):
+                    self.stagnated_at = current_time
+                    self.previous_accelerations = []
+                    self.next_time_required_for_stagnation = STAGNATION_ACCELERATION_THRESHOLD * (random.randint(1, 2) - 0.5)
+
+            self.previous_accelerations = self._filter_old_acceleration_data(self.previous_accelerations)
+
+            should_supress = False
+            return (0, 0,), should_supress
+        else:
+            print "BACKTRACKING FROM STAGNATION!"
+            should_supress = True
+            return (- random.randint(0, 10) / 10.0, -1.0,), should_supress
+
+    def _has_enough_data_to_determine_stagnation(self, accelerations):
+        for (t, _) in accelerations:
+            if t + self.next_time_required_for_stagnation < time.time() * 1000:
+                return True
+        return False
+
+    def _filter_old_acceleration_data(self, accelerations):
+        current_time = time.time() * 1000
+        return [(t, a) for (t, a) in accelerations if t + TIME_REQUIRED_FOR_STAGNATION >= current_time]
+
+    def _has_stagnated(self, accelerations):
+        accelerations = map(lambda x: x[1], accelerations)
+        return abs(min(accelerations) - max(accelerations)) < STAGNATION_ACCELERATION_THRESHOLD
 
 """
 class Stagnation(object):
