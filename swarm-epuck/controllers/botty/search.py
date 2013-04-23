@@ -28,4 +28,4 @@ class SearchLayer(Layer):
 
     def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
         should_supress = False
-        return self.find_speed(), should_supress
+        return self.find_speed(proximities), should_supress

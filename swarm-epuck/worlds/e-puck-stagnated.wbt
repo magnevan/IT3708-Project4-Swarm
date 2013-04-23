@@ -1,0 +1,178 @@
+#VRML_SIM V6.0 utf8
+WorldInfo {
+  info [
+    "The model of the E-puck robot"
+    "Author: Simon Blanchoud & Olivier Michel"
+    "Date: 01 SEP 2006"
+  ]
+  title "E-puck"
+}
+Viewpoint {
+  orientation -0.956432 0.248531 0.153199 1.09397
+  position 0.708358 2.99856 1.12476
+}
+Background {
+  skyColor [
+    0.4 0.7 1
+  ]
+}
+DEF ground Solid {
+  translation 0 -0.0001 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 1
+          specularColor 0.196078 0.196078 0.196078
+        }
+        texture ImageTexture {
+          url [
+            "textures/lightwood.png"
+          ]
+        }
+        textureTransform TextureTransform {
+          center 0.46 0
+          rotation -0.32
+          translation -1.01 0
+        }
+      }
+      geometry DEF ground_geo IndexedFaceSet {
+        coord Coordinate {
+          point [
+            -1 0 -1
+            -1 0 1
+            1 0 1
+            1 0 -1
+          ]
+        }
+        texCoord TextureCoordinate {
+          point [
+            0 0
+            0 5
+            5 5
+            5 0
+          ]
+        }
+        coordIndex [
+          0 1 2 3 -1
+        ]
+        texCoordIndex [
+          0 1 2 3 -1
+        ]
+      }
+    }
+  ]
+  boundingObject Transform {
+    translation 0 -0.01 0
+    children [
+      Box {
+        size 2 0.02 2
+      }
+    ]
+  }
+}
+DEF short_rock_6 Solid {
+  translation 0.193613 0.0848035 -0.251788
+  rotation 0.0353581 0.0353585 0.998749 1.57205
+  scale 1.7 1.7 1.7
+  children [
+    PointLight {
+      attenuation 0.001 0.001 0.01
+      intensity 0.01
+      castShadows TRUE
+    }
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 0.0980392 0.0117647
+          emissiveColor 0.8 0.1 0.2
+          specularColor 1 0 0
+        }
+      }
+      geometry DEF short_brick_1_geometry Box {
+        size 0.1 0.1 0.1
+      }
+    }
+  ]
+  name "short white brick"
+  boundingObject USE short_brick_1_geometry
+  physics Physics {
+    density -1
+    mass 0.05
+  }
+}
+Solid {
+  translation 1 0.05 0
+  children [
+    DEF WALL_SHAPE Shape {
+      appearance DEF WALL_APPEARANCE Appearance {
+        material Material {
+          diffuseColor 1 0.501961 0.25098
+        }
+      }
+      geometry Box {
+        size 0.02 0.1 2
+      }
+    }
+  ]
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation -1 0.05 0
+  children [
+    USE WALL_SHAPE
+  ]
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation 0 0.05 1
+  rotation 0 1 0 1.5708
+  children [
+    USE WALL_SHAPE
+  ]
+  boundingObject USE WALL_SHAPE
+}
+Solid {
+  translation 0 0.05 -1
+  rotation 0 1 0 1.5708
+  children [
+    USE WALL_SHAPE
+  ]
+  boundingObject USE WALL_SHAPE
+}
+DEF E_PUCK1 EPuck {
+  translation 0.243471 -0.000141519 -0.3774
+  rotation -2.06728e-05 0.999998 -0.00204476 -3.14157
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK2 EPuck {
+  translation 0.314556 -0.000141307 -0.26778
+  rotation 0.00202836 0.999996 -0.00207481 1.57083
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK3 EPuck {
+  translation 0.146055 -0.000141539 -0.126339
+  rotation 0.999924 0.00657552 -0.0103943 0.0040883
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
+DEF E_PUCK4 EPuck {
+  translation 0.0705437 -0.000141357 -0.265784
+  rotation -0.0020711 0.999996 -0.00202882 -1.57077
+  controller "botty"
+  name "e-puck camera"
+  camera_windowPosition 0.75 0.75
+  camera_fieldOfView 0.6
+  camera_pixelSize 4
+}
