@@ -27,4 +27,4 @@ class SearchLayer(Layer):
             return self.motor
 
     def act(self, proximities, lights, acceleration):
-        return self.find_speed(proximities), false
+        return self.find_speed(proximities), False
