@@ -281,6 +281,29 @@ movement of the box.
 \section{Possible improvements}
 \label{sec:b1}
 
+\subsection{Aimed retrieval}
+
+The retrieval layer works by rotating until it has determined that it is 
+facing the target box. Once it faces the target, it will commence moving 
+farward as long as it determines it is still facing the box. The problem with 
+this is that the bot will rarely push directly on the box, but with an angle.  
+This is not beneficial, as not all potential force is directed towards it.
+
+We have solved this with a technique which controls the motors and the 
+direction of the bot by utilizing the two most-front light sensors. This 
+technique will make sure that the bot is facing the light source is a highest 
+possible degree. The following pseudo-code shows this:
+
+\begin{python}
+right, left = float(proximities[0]), float(proximities[7])
+
+if max((right, left)) > DIST_THRESH:
+    total = right + left
+    l_wheel_speed, r_wheel_speed = left / total, right / total
+else:
+    l_wheel_speed, r_wheel_speed = 1, 1
+\end{python}
+
 \section{Implementating and evaluating the improvements}
 
 \begin{figure}[!h]
