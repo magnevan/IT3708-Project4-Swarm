@@ -49,18 +49,27 @@
 \maketitle
 
 \section{Introduction}
+In this project we will design a controller based on Brooks Architechture to
+explore cooperative transport of a box in Webots environment. Intended box
+pushing task draws inspiration from swarm behaviour of ants observed often
+during food retrieval. The idea is to create a decentralized system invoking
+group behavior through simple mechanisms which if successful, leads to an
+emergent self-organized behaviour.
 
-In this project we will design a controller based on Brooks Architechture to explore
-cooperative transport of a box in Webots environment. Intended box pushing task draws 
-inspiration from swarm behaviour of ants observed often during food retrieval. The
-idea is to create a decentralized system invoking group behavior through simple 
-mechanisms which if successful, leads to an emergent self-organized behaviour.
+The rest of this report is structured as follows. In Section~\ref{sec:a1} we
+give a brief overview of our system (Deliverable A1).  Further, in
+Section~\ref{sec:a2} we describe our control system, and discuss its observed
+behavior (Deliverable A2). Then, in Section~\ref{sec:b1} we discuss possible
+improvements to the system (Deliverable B1). Finally, in Section~\ref{sec:b2}
+we present out implementation of the improvements, and discuss how they
+improved the e-puck's performance in the simulation (Deliverable B2).
 
-\section{Initial implementation}
+\section{System overview}
+\label{sec:a1}
 
 \subsection{Changes to world}
-We tried to emulate our world to behave as closely to the live demonstration we
-we're given of the e-pucks swarm. Thus we made the following changes:
+We tried to emulate our world to behave as closely to the live demonstration
+we we're given of the e-pucks swarm. Thus we made the following changes:
 
 \begin{itemize}
 \item Removed all lose solids from the world except for one, which will become our food.
@@ -71,7 +80,8 @@ we're given of the e-pucks swarm. Thus we made the following changes:
 \item Reduced tick interval to \tickinterval.
 \end{itemize}
 
-\subsection{System description}
+\section{E-puck control system}
+\label{sec:a2}
 
 \begin{figure}
   \centering
@@ -80,11 +90,13 @@ we're given of the e-pucks swarm. Thus we made the following changes:
   \label{fig:architecture}
 \end{figure}
 
-\section{Resulting behavior}
+\subsection{Resulting behavior}
 
 \section{Possible improvements}
+\label{sec:b1}
 
-\section{Behavior after improvements}
+\section{Implementating and evaluating the improvements}
+\label{sec:b2}
 
 
 \end{document}
