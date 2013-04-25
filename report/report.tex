@@ -148,8 +148,53 @@ def act(self, proximities, lights, speed):
   \label{fig:architecture}
 \end{figure}
 
+We used the three-layer approach which was used for CRABS, and presented in
+the assignment text, but we rewrote each layer from scratch. 
+We will not present our initial design for each layer.
 
+\subsection{Search}
+The search layer is built as a simple state-based random explorer, which also
+tries to avoid crashing into walls.  This layer never supresses (as it is the
+most primitive). 
 
+The exploration function is functionally similar to the following pseudo-code:
+
+\begin{python}
+def find_speed(self, proximities):
+    prox_right, prox_left = proximities[:3], proximities[5:]
+
+    # Check for obstacles
+    if any(p > DIST_THRESH for p in prox_right+prox_left):
+        tot         = sum(prox_right + prox_left)
+        left_power  = sum(prox_left)  / tot
+        right_power = sum(prox_right) / tot
+        return left_power, right_power
+    else:
+        # No obstacles, continue in set random direction,
+        # or, with random probability, choose a new direction
+        if random() < PROB_CHANGE_DIR:
+            self.rand_move_dir = (
+                uniform(.5, 1.0), 
+                uniform(.5, 1.0)
+            )
+        return self.rand_move_dir
+\end{python}
+
+The gist of the code is: If there are obstacles nearby, the bot should try
+to avoid them. Otherwise, it will just continue in a set random motion, with
+some chance of choosing a new direction (with our current parameter choice, a
+direction change can be expected after 2-3 seconds). 
+
+\subsection{Retrieval}
+The search layer is the most primitive.
+TODO TODO
+
+\subsection{Stagnation}
+The search layer is the most primitive.
+TODO TODO
+TODO TODO
+TODO TODO
+TODO TODO
 
 
 \subsection{Resulting behavior}
