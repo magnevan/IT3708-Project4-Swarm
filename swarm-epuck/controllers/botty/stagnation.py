@@ -1,58 +1,73 @@
 from layer import Layer
-import time
-import math
 import random
 
-BACKTRACK_AFTER_STAGNATION_FOR_MS = 2000
-TIME_REQUIRED_FOR_STAGNATION = 2000
-STAGNATION_PROXIMITY_THRESHOLD = 400
-
 class StagnationLayer(Layer):
-    stagnated_at = None
-    previous_proximities = None
-
     def __init__(self):
-        self.stagnated_at = 0
-        self.previous_proximities = []
+        self._stagnation_rem = 0
+        self._still_cnt = 0
+        self._prev_observations = []
 
+    # OH YE LORDS OF THE UNIVERSE
+    # BEHOLD THE UGLIEST CODE YOU HATH EVER SEEN
     def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
-        current_time = time.time() * 1000
-        
-        if self.stagnated_at + BACKTRACK_AFTER_STAGNATION_FOR_MS < current_time:
-            print "Has not stagnated. ({0})".format(previous_layer_did_suppress)
-            # Add the first two values of acceleration.
-            if (not math.isnan(proximities[5]) and not math.isnan(proximities[6]) and
-                not math.isnan(proximities[0]) and not math.isnan(proximities[1])):
-                self.previous_proximities.append((proximities[5], proximities[6], proximities[0], proximities[1]))
+        # Add new observations
+        self._prev_observations.append((
+            proximities,
+            lights,
+            acceleration,
+        ))
 
-            # See if we have data from 'TIME_REQUIRED_FOR_STAGNATION' ago and thus can determine whether or not we have stagnated.
-            if self._has_enough_data_to_determine_stagnation(self.previous_proximities):
-                # Stagnation is only a possible state if the previous layer did suppress.
-                if previous_layer_did_suppress:
-                    # Have we stagnated?
-                    if self._has_stagnated(self.previous_proximities):
-                        self.stagnated_at = current_time
-                        self.previous_proximities = []
+        # Filter out old ones and just keep the 10 most recent
+        self._prev_observations = self._prev_observations[-10:]
 
-            self.previous_proximities = self.previous_proximities[-TIME_REQUIRED_FOR_STAGNATION / 100:]
+        if self._stagnation_rem > 50:
+            self._stagnation_rem -= 1
+            return (-1, -random.uniform(0.5, 0.9),), True
+        elif self._stagnation_rem > 40:
+            self._stagnation_rem -= 1
+            return random.choice([
+                (1.0, -1),
+                (-.5, 1)
+            ]), True
+        elif self._stagnation_rem > 0:
+            self._stagnation_rem -= 1
+            return (1,  1,), True
 
-            should_supress = False
-            return (0, 0,), should_supress
+        if self._has_stagnated() and previous_layer_did_suppress:
+            self._still_cnt += 1
         else:
-            print "BACKTRACKING FROM STAGNATION!"
-            should_supress = True
-            return (- random.randint(0, 10) / 10.0, -1.0,), should_supress
+            self._still_cnt = 0
 
-    def _has_enough_data_to_determine_stagnation(self, proximities):
-        return len(self.previous_proximities) >= TIME_REQUIRED_FOR_STAGNATION / 100
+        if self._still_cnt >= 50 and random.random() < 0.1:
+            self._stagnation_rem = 80
+            self._still_cnt = 0
 
-    def _has_stagnated(self, proximities):
-        check_n_steps_back = TIME_REQUIRED_FOR_STAGNATION / 100
-        last_n_proximities = proximities[-check_n_steps_back:]
-        last_n_proximities = [map(lambda x: x[i], last_n_proximities) for i in range(4)]
+        return (0, 0,), False
 
-        return (all(max(i_proximities) - min(i_proximities) < STAGNATION_PROXIMITY_THRESHOLD for i_proximities in last_n_proximities) and
-                any(max(i_proximities) > 1000 for i_proximities in last_n_proximities))
+    def _has_stagnated(self):
+        if len(self._prev_observations) < 10:
+            return False
+
+        (proximity_observations,
+         light_observations,
+         acceleration_observations) = zip(*self._prev_observations)
+
+        # See if proximity has changed in recent future
+        if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150 for i_sensor_obs in zip(*proximity_observations)):
+            return False
+
+        # See if light has changed in recent future
+        if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150 for i_sensor_obs in zip(*light_observations)):
+            return False
+
+        # See if acceleration has changed in recent future
+        if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 0.1 for i_sensor_obs in zip(*acceleration_observations)):
+            return False
+
+        # Nothing has changed in recent future
+        # This is indicative of a stagnation
+        return True
+
 
 """
 class Stagnation(object):
