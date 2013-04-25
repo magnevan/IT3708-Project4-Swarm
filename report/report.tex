@@ -314,6 +314,27 @@ else:
     l_wheel_speed, r_wheel_speed = 1, 1
 \end{python}
 
+\subsection{Least effort rotation}
+
+The search for a target ends when the bot senses a light above a threshold in 
+any direction. The box will then proceed with rotating in order to face the 
+target. The rotation direction was initially static, making the bot rotate 
+sub-optimally.
+
+We sought to improve this and the way we did this was simply to calculate 
+which side of the robot that was exposed to more light, indicating where the 
+target is and rotate in that direction. The following pseudo-code shows this:
+
+\begin{python}
+l_light_exposure = sum(lights[i] for i in xrange(4))
+r_light_exposure = sum(lights[i] for i in xrange(4,8))
+
+if l_light_exposure < r_light_exposure:
+    l_wheel_speed, r_wheel_speed = .3, -.3
+else:
+    l_wheel_speed, r_wheel_speed = -.3, .3
+\end{python}
+
 \section{Implementating and evaluating the improvements}
 
 We tested our improvements over a number of runs, and not only did we eliminate
