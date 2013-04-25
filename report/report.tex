@@ -21,6 +21,7 @@
 \input{pythonlisting.inc}
 
 \counterwithin{figure}{subsection}
+\counterwithin{table}{subsection}
 
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
@@ -247,6 +248,7 @@ def _has_stagnated(self):
 \end{python}
 
 \subsection{Resulting behavior}
+\label{sec:part-a behavior}
 
 Using this system, the robots will often manage to push the box into one of
 the corners, as seen in the timings in the table below. However our bots did
@@ -271,10 +273,12 @@ movement of the box.
 \end{enumerate}
 
 \begin{table}
+    \centering
     \begin{tabular}{llllll}
     Run \# & 1     & 2     & 3     & 4          & 5     \\ \hline
     Time  & 00:44 & 00:22 & 00:38 & STAGNATED! & 01:12 \\
     \end{tabular}
+    \caption{Run-time tests on the bot defined in part a}
 \end{table}
 
 
@@ -305,6 +309,19 @@ else:
 \end{python}
 
 \section{Implementating and evaluating the improvements}
+
+We tested our improvements over a number of runs, and not only did we eliminate
+all the unwanted behaviors  mentioned in section \ref{sec:part-a behavior}, we also managed 
+to get run-times to generally be below half a minutes (except in certain stress tests).
+
+\begin{table}
+    \centering
+    \begin{tabular}{llllll}
+    Run \# & 1        & 2         & 3        & 4        & 5     \\ \hline
+    Time     & 00:12 & 00:22 & 00:20 & 00:12 & 00:26 \\
+    \end{tabular}
+    \caption{Run-time tests on average cases for the improved bot.}
+\end{table}
 
 \begin{figure}[!h]
     \centering
