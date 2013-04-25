@@ -20,8 +20,8 @@
 
 \input{pythonlisting.inc}
 
-\counterwithin{figure}{subsection}
-\counterwithin{table}{subsection}
+%\counterwithin{figure}{subsection}
+%\counterwithin{table}{subsection}
 
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
@@ -41,7 +41,7 @@
     IT - 3708 Sub-Symbolic AI Methods \\
     Homework Exercise 4\\
     ~\\
-    \emph{A Controller for Swarm Behaviour in Webots}
+    \emph{Investigating Swarm Behaviour in Webots}
 }
 \author{
     Edvard K. Karlsen \\
@@ -61,12 +61,16 @@
 \maketitle
 
 \section{Introduction}
-In this project we will design a controller based on Brooks Architechture to
-explore cooperative transport of a box in Webots environment. Intended box
-pushing task draws inspiration from swarm behaviour of ants observed often
-during food retrieval. The idea is to create a decentralized system invoking
-group behavior through simple mechanisms which if successful, leads to an
-emergent self-organized behaviour.
+For the final project in IT 3708, we have designed and implemented a robot
+controller based on Rodney Brooks' \emph{subsumption
+architecture}~\cite{brooks1986}.  We have tested the
+\emph{e-pucks}~\cite{bonani2009} in a collaborative box-pushing task simulated
+in the Webots development environment.  
+
+The intended box pushing behavior draws inspiration from the swarm behaviour
+observed in ants during food retrieval.  The idea is to create a decentralized
+system invoking group behavior through simple mechanisms which if successful,
+leads to an emergent self-organized behaviour.
 
 The rest of this report is structured as follows. In Section~\ref{sec:a1} we
 give a brief overview of our system (Deliverable A1).  Further, in
@@ -76,12 +80,23 @@ improvements to the system (Deliverable B1). Finally, in Section~\ref{sec:b2}
 we present out implementation of the improvements, and discuss how they
 improved the e-puck's performance in the simulation (Deliverable B2).
 
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.99\textwidth]{%
+    models/SubSym Proj 4 architecture.png}
+    \caption{Overview of the e-puck control system}
+  \label{fig:architecture}
+\end{figure}
+
 \section{System overview}
 \label{sec:a1}
 
-\subsection{Changes to world}
+Figure~\ref{fig:architecture} illustrates the main components of our system.
+
+\subsection{Changes to the simulation world}
 We tried to emulate our world to behave as closely to the live demonstration
-we were given of the e-pucks swarm. Thus, we made the following changes:
+we were given of the e-pucks swarm. With this aim in mind, we made the
+following changes to the simulation world:
 
 \begin{itemize}
     \item Removed all loose solids from the world except for one, which will
@@ -96,19 +111,19 @@ we were given of the e-pucks swarm. Thus, we made the following changes:
     \item Reduced the tick interval to \tickinterval.
 \end{itemize}
 
-\clearpage
 
-\section{E-puck control system}
+\subsection{E-puck control system}
 \label{sec:a2}
 
-The arbitrarian component of a subsumption-based system can be implemented in
-many ways, from ad-hoc solutions with explicit, highly coupled,  communication
-between layers, to general network graphs with arbitrary supression edges. We
-chose a compromise between simplicity and flexibility: we use a single list of
-control layers sorted by ascending sophistication. Each time we choose an
-action, we iterate through the list of layers, and choose the action proposed
-by the most sophisticated supressing layer (or the most primal action, if no
-higher layers opt to supress). 
+\subsubsection{Behavior selection}
+The layer/behavior-selection component of a subsumption-based system can be
+implemented in many ways -- from ad-hoc solutions with explicit, highly
+coupled, communication between layers, to general network graphs with
+arbitrary supression edges. We chose a compromise between simplicity and
+flexibility: we use a single list of control layers sorted by ascending
+sophistication. Each time we choose an action, we iterate through the list of
+layers, and choose the action proposed by the most sophisticated supressing
+layer (or the most primal action, if no higher layers opt to supress). 
 
 The following Python-style pseudo code shows the outline of the
 bot's control system (see \texttt{botty.py}).
@@ -147,19 +162,10 @@ def act(self, proximities, lights, speed):
     # (output power), should_supress
 \end{python}
 
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{%
-    models/SubSym Proj 4 architecture.png}
-  \caption{Controller architecture for the box pushing task.}
-  \label{fig:architecture}
-\end{figure}
-
 We used the three-layer approach which was used for CRABS, and presented in
 the assignment text, but we rewrote each layer from scratch.
 
-\subsection{Search}
+\subsubsection{Search}
 The search layer is built as a simple state-based random explorer, which also
 tries to avoid crashing into walls.  This layer never suppresses (as it is the
 most primitive). 
@@ -192,7 +198,7 @@ to avoid them. Otherwise, it will just continue in a set random motion, with
 some chance of choosing a new direction (with our current parameter choice, a
 direction change can be expected after 2-3 seconds). 
 
-\subsection{Retrieval}
+\subsubsection{Retrieval}
 The retrieval layer mainly uses the light sensor to detect the presence of a
 food source nearby, which when detected, it will home in on, and push.
 
@@ -201,7 +207,7 @@ signal over a certain threshold. When light is detected it will rotate clockwise
 the light is the strongest right in front of the robot (presumably that's where 
 the food is), and then move straight ahead to push it.
 
-\subsection{Stagnation}
+\subsubsection{Stagnation}
 The stagnation layer is tasked with identifying stagnation, which is when a 
 bot is trying to push a target, but for some reason fails to do so and does 
 not move. The method for deducing whether or not this has occurred utilizes 
@@ -369,5 +375,8 @@ to get run-times to generally be below half a minutes (except in certain stress 
 
 \label{sec:b2}
 
+
+\bibliographystyle{plain}
+\bibliography{refs} 
 
 \end{document}
