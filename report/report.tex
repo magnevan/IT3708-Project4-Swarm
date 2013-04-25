@@ -13,6 +13,9 @@
 \usepackage{xcolor}
 \usepackage{colortbl}
 \usepackage{chngcntr}
+\usepackage{subcaption}
+
+\input{pythonlisting.inc}
 
 \counterwithin{figure}{subsection}
 
@@ -24,6 +27,9 @@
 \newcommand{\foodmass}{0.3}
 \newcommand{\lightintensity}{0.01}
 \newcommand{\tickinterval}{100 ms}
+
+
+
 
 \title{
     IT - 3708 Sub-Symbolic AI Methods \\
@@ -69,26 +75,82 @@ improved the e-puck's performance in the simulation (Deliverable B2).
 
 \subsection{Changes to world}
 We tried to emulate our world to behave as closely to the live demonstration
-we we're given of the e-pucks swarm. Thus we made the following changes:
+we were given of the e-pucks swarm. Thus, we made the following changes:
 
 \begin{itemize}
-\item Removed all lose solids from the world except for one, which will become our food.
-\item Added physics to the food, and set the mass to \foodmass.
-\item Added a point light to the food with intensity \lightintensity.
-\item Removed all ambient lighting, and other point lights.
-\item Increased the number of e-pucks to \numbots.
-\item Reduced tick interval to \tickinterval.
+    \item Removed all lose solids from the world except for one, which will
+    become our food.
+    \item Added physics to the food, and set the mass to \foodmass.
+    \item Added a point light to the food with intensity \lightintensity.
+    \item Removed all ambient lighting, and all other point lights. (Thus, the
+    only remaining light source is the food.)
+    \item Increased the number of e-pucks to \numbots.
+    \item Reduced the tick interval to \tickinterval.
 \end{itemize}
+
+\clearpage
 
 \section{E-puck control system}
 \label{sec:a2}
 
+The arbitrarian component of a subsumption-based system can be implemented in
+many ways, from ad-hoc solutions with explicit, highly coupled,  communication
+between layers, to general network graphs with arbitrary supression edges. We
+chose a compromise between simplicity and flexibility: we use a single list of
+control layers sorted by ascending sophistication. Each time we choose an
+action, we iterate through the list of layers, and choose the action proposed
+by the most sophisticated supressing layer (or the most primal action, if no
+higher layers opt to supress). 
+
+The following Python-style pseudo code shows the outline of the
+bot's control system (see \texttt{botty.py}).
+
+\begin{python}
+def run_botty(self):
+    self.layers = [
+        SearchLayer(),
+        RetrievalLayer(),
+        StagnationLayer()
+    ]
+
+    while True:
+        self.tick()
+
+def tick(self):
+    proximities = self.get_proximities()
+    lights      = self.get_lights()
+    speed       = self.get_speed()
+
+    output = None
+    for each layer in self.layers:
+        proposed_output, should_supress = layer.act(proximities, 
+                                                    lights, speed)
+
+        if output is None or should_supress:
+            output = proposed_output
+
+    self.move_wheels(output)
+\end{python}
+
+As is seen, each layer implements a general interface: 
+\begin{python}
+def act(self, proximities, lights, speed):
+    # return two-tuple 
+    # (output power), should_supress
+\end{python}
+
+
 \begin{figure}
   \centering
-  \includegraphics[width=0.99\textwidth]{models/SubSym Proj 4 architecture.png}
-  \caption{Controller architecture for Box Pushing Task.}
+  \includegraphics[width=0.8\textwidth]{%
+    models/SubSym Proj 4 architecture.png}
+  \caption{Controller architecture for the box pushing task.}
   \label{fig:architecture}
 \end{figure}
+
+
+
+
 
 \subsection{Resulting behavior}
 
@@ -96,6 +158,23 @@ we we're given of the e-pucks swarm. Thus we made the following changes:
 \label{sec:b1}
 
 \section{Implementating and evaluating the improvements}
+
+\begin{figure}[!h]
+    \centering
+
+    \begin{subfigure}[!h]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{models/stresstest.PNG}
+    \end{subfigure}
+    \begin{subfigure}[!h]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{models/stresstest2.PNG}
+    \end{subfigure}
+
+    \caption{A group of eight e-pucks solving a $0.7$-mass box pushing task.
+    To move a box with this mass, almost all the robots must take part in the
+    pushing motion, and no robot can hinder it.}
+\end{figure}
+
+
 \label{sec:b2}
 
 
