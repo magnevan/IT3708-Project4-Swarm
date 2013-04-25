@@ -24,7 +24,7 @@
 
 \newcommand{\varopt}[1]{\textsc{#1}}
 \newcommand{\numbots}{4}
-\newcommand{\foodmass}{0.3}
+\newcommand{\foodmass}{0.05}
 \newcommand{\lightintensity}{0.01}
 \newcommand{\tickinterval}{100 ms}
 
@@ -78,9 +78,11 @@ We tried to emulate our world to behave as closely to the live demonstration
 we were given of the e-pucks swarm. Thus, we made the following changes:
 
 \begin{itemize}
-    \item Removed all lose solids from the world except for one, which will
+    \item Removed all loose solids from the world except for one, which will
     become our food.
     \item Added physics to the food, and set the mass to \foodmass.
+    We found this to be a good number for our basic tests as it
+    requires two or more bots to be cooperating to push the box.
     \item Added a point light to the food with intensity \lightintensity.
     \item Removed all ambient lighting, and all other point lights. (Thus, the
     only remaining light source is the food.)
