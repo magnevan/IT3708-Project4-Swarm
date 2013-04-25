@@ -35,3 +35,10 @@ nosetests.xml
 .pydevproject
 
 *.wbproj
+
+# miktex
+*.aux
+*.log
+*.out
+*.pdf
+*.synctex.*
