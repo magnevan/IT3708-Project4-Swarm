@@ -28,6 +28,9 @@ class RetrivalLayer(Layer):
             else:
                 output = 1, 1
         else:
-            output = .3, -.3
+            if sum(lights[i] for i in xrange(4)) < sum(lights[i] for i in xrange(4,8)):
+                output = .3, -.3
+            else:
+                output = -.3, .3
 
         return output, True
