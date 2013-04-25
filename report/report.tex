@@ -196,9 +196,9 @@ The retrieval layer mainly uses the light sensor to detect the presence of a
 food source nearby, which when detected, it will home in on, and push.
 
 The retrieval layer will begin suppressing as soon as it detects a light
-signalover a certain threshold. When light is detected it will rotate until the
-light is the strongest right in front of the robot (presumably that's where 
-the food is).
+signal over a certain threshold. When light is detected it will rotate clockwise until 
+the light is the strongest right in front of the robot (presumably that's where 
+the food is), and then move straight ahead to push it.
 
 \subsection{Stagnation}
 The stagnation layer is tasked with identifying stagnation, which is when a 
