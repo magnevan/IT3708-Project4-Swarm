@@ -1,3 +1,5 @@
+% vim: set tw=79
+
 \documentclass[a4paper,10pt]{article}
 
 \usepackage[utf8]{inputenc}
@@ -27,8 +29,10 @@
 \newcommand{\numbots}{4}
 \newcommand{\foodmass}{0.05}
 \newcommand{\lightintensity}{0.01}
-\newcommand{\tickinterval}{100 ms}
 
+% Warning: these two are tightly coupled!
+\newcommand{\tickinterval}{100 ms}
+\newcommand{\tickspersecond}{10}
 
 
 
@@ -197,12 +201,50 @@ light is the strongest right in front of the robot (presumably that's where
 the food is).
 
 \subsection{Stagnation}
-The search layer is the most primitive.
-TODO TODO
-TODO TODO
-TODO TODO
-TODO TODO
+The stagnation layer is tasked with identifying stagnation, which is when a 
+bot is trying to push a target, but for some reason fails to do so and does 
+not move. The method for deducing whether or not this has occurred utilizes 
+all sensory value input available.
 
+The layer will collect all sensory input values from the last 
+{\tickspersecond} iterations.  
+
+For each sensor, its {\tickspersecond} values are analyzed. If the difference 
+between the maximum value of the sequence and the minimum value of the 
+sequence is above a certain threshold, stagnation is not considered to be in 
+effect. Stagnation will only occur if no sensor reports any significant change 
+in value within the {\tickspersecond} most recent iterations.
+
+The following pseudo-code shows this:
+
+\begin{python}
+def _has_stagnated(self):
+    if len(self._prev_observations) < 10:
+        return False
+
+    (proximity_observations,
+     light_observations,
+     acceleration_observations) = zip(*self._prev_observations)
+
+    # See if proximity has changed in recent future
+    if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
+           for i_sensor_obs in zip(*proximity_observations)):
+        return False
+
+    # See if light has changed in recent future
+    if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
+           for i_sensor_obs in zip(*light_observations)):
+        return False
+
+    # See if acceleration has changed in recent future
+    if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 0.1
+           for i_sensor_obs in zip(*acceleration_observations)):
+        return False
+
+    # Nothing has changed in recent future
+    # This is indicative of a stagnation
+    return True
+\end{python}
 
 \subsection{Resulting behavior}
 
