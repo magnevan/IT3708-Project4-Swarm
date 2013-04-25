@@ -21,12 +21,7 @@ class RetrivalLayer(Layer):
         should_push = all(lights[i] < PUSH_THRESHOLD for i in (6, 7, 0, 1,))
 
         if should_push:
-            right, left = float(proximities[0]), float(proximities[7])
-            if max((right,left)) > DIST_THRESH and PUSH_STRAIGHT:
-                tot = right+left
-                output = left/tot, right/tot
-            else:
-                output = 1, 1
+            output = 1, 1
         else:
             output = .3, -.3
 
