@@ -248,6 +248,36 @@ def _has_stagnated(self):
 
 \subsection{Resulting behavior}
 
+Using this system, the robots will often manage to push the box into one of
+the corners, as seen in the timings in the table below. However our bots did
+display some strange behaviors we might want to correct.
+
+First of, our bots would sometimes loose sight of the box it it was
+pushing near the corners of the box, or close to another bot. The result would
+be that the bot would sometimes spin almost $360^\circ$ around, instead of
+just making the small correction necessary. Another problems was that the
+bots would in addition to pushing the food, push each other quite aggressively,
+which seems to have at least two detrimental effects.
+\begin{enumerate}
+\item They would push
+each other off the box, which both slows down progress, and sometimes
+leads to a change in direction of the box. Sometimes the box would almost
+make it to an edge before the robots would make a turn and start pushing
+it towards another far away edge.
+\item Often we couldn't adequately detect stagnation, because even if
+the box itself was not moving, the robots would be nudging each other
+continuously, which to our stagnation algorithm is equivalent to genuine
+movement of the box.
+\end{enumerate}
+
+\begin{table}
+    \begin{tabular}{llllll}
+    Run \# & 1     & 2     & 3     & 4          & 5     \\ \hline
+    Time  & 00:44 & 00:22 & 00:38 & STAGNATED! & 01:12 \\
+    \end{tabular}
+\end{table}
+
+
 \section{Possible improvements}
 \label{sec:b1}
 
