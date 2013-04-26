@@ -136,6 +136,8 @@ layer (or the most primal action, if no higher layers opt to suppress).
 The following Python-style pseudo code shows the outline of the
 bot's control system (see \texttt{botty.py}).
 
+\clearpage
+
 \begin{python}
 def run_botty(self):
     self.layers = [
@@ -299,6 +301,8 @@ movement of the box.
 \end{table}
 
 
+\clearpage
+
 \section{Possible improvements}
 \label{sec:b1}
 
@@ -365,7 +369,9 @@ avoidance technique is
 rather large, we will not present it here, but the actual code can be viewed
 in \texttt{botty.py} and \texttt{stagnation.py}.
 
+
 \section{Implementing and evaluating the improvements}
+\label{sec:b2}
 We tested our improvements over a number of runs, and not only did we eliminate
 all the unwanted behaviors  mentioned in section \ref{sec:part-a behavior}, we also managed 
 to get run-times to generally be below half a minutes (except in certain stress tests).
@@ -377,13 +383,6 @@ algorithms also seemed to have the desired effect, in that they both
 converged upon the box faster, and seemed to be able to push the box
 in a much more stable manner.
 
-While testing, we found that in addition to the times displayed in table
-\ref{improved bot tests}, our robots used approximately 40 seconds to
-solve a test case we created where robots began in a stagnated state,
-with a single robot on each side. The system used between one and two 
-minutes, when we made the box heavier and added four more robots to the swarm as seen
-in figure \ref{mass robots}.
-
 \begin{table}[h]
     \centering
     \begin{tabular}{c|c|c|c|c|c}
@@ -394,6 +393,13 @@ in figure \ref{mass robots}.
     \caption{Run-time tests on average cases for the improved bot.}
     \label{improved bot tests}
 \end{table}
+
+While testing, we found that in addition to the times displayed in table
+\ref{improved bot tests}, our robots used approximately 40 seconds to
+solve a test case we created where robots began in a stagnated state,
+with a single robot on each side. The system used between one and two 
+minutes, when we made the box heavier and added four more robots to the swarm as seen
+in figure \ref{fig:massrobots}.
 
 \begin{figure}[!h]
     \centering
@@ -408,11 +414,11 @@ in figure \ref{mass robots}.
     \caption{A group of eight e-pucks solving a $0.7$-mass box pushing task.
     To move a box with this mass, almost all the robots must take part in the
     pushing motion, and no robot can hinder it.}
-    \label{mass robots}
+    \label{fig:massrobots}
 \end{figure}
 
 
-\label{sec:b2}
+\vspace{10pt}
 
 
 \bibliographystyle{plain}
