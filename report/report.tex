@@ -351,7 +351,20 @@ We tested our improvements over a number of runs, and not only did we eliminate
 all the unwanted behaviors  mentioned in section \ref{sec:part-a behavior}, we also managed 
 to get run-times to generally be below half a minutes (except in certain stress tests).
 
-\begin{table}
+Due to the changes in the stagnation algorithm, we observed the bots were able 
+to discover stagnation even in cases where there would be a lot of jostling
+between the robots like we had expected. Our improvements to the retrieval
+algorithms also seemed to have the desired effect, in that they both
+converged upon the box faster, and seemed to be able to push the box
+in a much more stable manner.
+
+While testing, we found that in addition to the times displayed in table
+\ref{improved bot tests}, our robots used approximately 40 seconds to
+solve a test case we created where robots began in a stagnated state,
+with a single robot on each side. And between one and two minutes, when
+we made the box heavier and added four more robots to the swarm.
+
+\begin{table}[h]
     \centering
     \begin{tabular}{c|c|c|c|c|c}
         \textbf{Run}    & \textbf{1} & \textbf{2} & \textbf{3} &
@@ -359,6 +372,7 @@ to get run-times to generally be below half a minutes (except in certain stress 
         \textbf{Time}   & 00:12 & 00:22 & 00:20 & 00:12 & 00:26 \\
     \end{tabular}
     \caption{Run-time tests on average cases for the improved bot.}
+    \label{improved bot tests}
 \end{table}
 
 \begin{figure}[!h]
