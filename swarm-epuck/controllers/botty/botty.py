@@ -4,7 +4,7 @@ import threading
 import random
 import epuck_basic as epb
 from search import SearchLayer
-from retrival import RetrivalLayer
+from retrieval import RetrivalLayer
 from stagnation import StagnationLayer
 
 
@@ -78,39 +78,19 @@ class Botty(epb.EpuckBasic):
 
     def _tick(self):
         proximities = self.get_proximities()
-        lights = self.get_lights()
-        jolt = self._jolt_sampler.get_jolt()
-
-        layer_actions = []
-
-
-        # Run all layers
-        for layer in self._layers:
-            layer_actions.append(layer.act(
-                proximities,
-                lights,
-                jolt,
-                layer_actions[-1][1] if len(layer_actions) > 0 else None))
+        lights      = self.get_lights()
+        jolt        = self._jolt_sampler.get_jolt()
 
         # Chose output action
         output = None
-        for proposed_output, should_supress in layer_actions:
-            if output is None or should_supress:
+        for layer in self._layers:
+            proposed_output, should_suppress = layer.act(proximities,
+                                                        lights, jolt)
+
+            if output is None or should_suppress:
                 output = proposed_output
 
         self.move_wheels(*output)
-        self._report(layer_actions, jolt)
-
-    def _report(self, layer_actions, jolt):
-        debug_str = '    '.join([
-            '[%-8.2f %-8.2f %-7s]' % (
-                left, right,
-                'SUPRESS' if should_supress else '',
-            )
-            for (left, right,), should_supress in layer_actions
-        ])
-        debug_str += ' (%.2f %.2f) ' % jolt
-        print debug_str
 
 
 if __name__ == '__main__':
