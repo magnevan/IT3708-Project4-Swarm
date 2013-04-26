@@ -150,12 +150,12 @@ def run_botty(self):
 def tick(self):
     proximities = self.get_proximities()
     lights      = self.get_lights()
-    speed       = self.get_speed()
+    jolt        = self.get_jolt()
 
     output = None
     for each layer in self.layers:
         proposed_output, should_supress = layer.act(proximities, 
-                                                    lights, speed)
+                                                    lights, jolt)
 
         if output is None or should_supress:
             output = proposed_output
@@ -165,7 +165,7 @@ def tick(self):
 
 As is seen, each layer implements a general interface: 
 \begin{python}
-def act(self, proximities, lights, speed):
+def act(self, proximities, lights, jolt):
     # return two-tuple 
     # (output power), should_supress
 \end{python}
