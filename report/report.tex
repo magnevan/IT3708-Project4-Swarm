@@ -92,6 +92,8 @@ improved the e-puck's performance in the simulation (Deliverable B2).
 \label{sec:a1}
 
 Figure~\ref{fig:architecture} illustrates the main components of our system.
+In the figure, `environment' can be interpreted as the Webots simulation
+world.
 
 \subsection{Changes to the simulation world}
 We tried to emulate our world to behave as closely to the live demonstration
@@ -124,11 +126,11 @@ sophisticated layer deals with \emph{stagnation} during the retrieval task.
 The layer/behavior-selection component of a subsumption-based system can be
 implemented in many ways -- from ad-hoc solutions with explicit, highly
 coupled, communication between layers, to general network graphs with
-arbitrary supression edges. We chose a compromise between simplicity and
+arbitrary suppression edges. We chose a compromise between simplicity and
 flexibility: we use a single list of control layers sorted by ascending
 sophistication. Each time we choose an action, we iterate through the list of
-layers, and choose the action proposed by the most sophisticated supressing
-layer (or the most primal action, if no higher layers opt to supress). 
+layers, and choose the action proposed by the most sophisticated suppressing
+layer (or the most primal action, if no higher layers opt to suppress). 
 
 The following Python-style pseudo code shows the outline of the
 bot's control system (see \texttt{botty.py}).
