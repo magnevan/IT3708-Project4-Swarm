@@ -17,6 +17,7 @@
 \usepackage{chngcntr}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{amsmath}
 
 \input{pythonlisting.inc}
 
@@ -269,7 +270,7 @@ pushing near the corners of the box, or close to another bot. The result would
 be that the bot would sometimes spin almost $360^\circ$ around, instead of
 just making the small correction necessary. Another problems was that the
 bots would in addition to pushing the food, push each other quite aggressively,
-which seems to have at least two detrimental effects.
+which seems to have at least three detrimental effects.
 \begin{enumerate}
 \item They would push
 each other off the box, which both slows down progress, and sometimes
@@ -344,6 +345,28 @@ if l_light_exposure < r_light_exposure:
 else:
     l_wheel_speed, r_wheel_speed = -.3, .3
 \end{python}
+
+\subsection{Derived speed to determine stagnation}
+
+Our way of identifying stagnation was based upon non-changing sensor values.  
+However, in a large, messy, stagnated situation, with many bots surrounding 
+the target, there will always be some jostling between the bots. This makes 
+sure that the sensor values does not stay constant and thus preventing us from 
+correctly identifying stagnation.
+
+Ideally, we would define stagnation as the act of trying to push a target, but 
+not changing position, IE. not having a speed. It so happens that we know the 
+acceleration of the bots and with the following formula we can derive the 
+speed of the bot.
+
+$$\int a \,\mathrm{d}t = v$$
+
+By creating a thread and constantly summarizing the experienced acceleration, 
+we can derive the speed of the bot and use it to determine whether the bot has 
+stagnated or not. As even the pseudo-code is rather large, we will not present 
+it here, but the actual code can be viewed in
+\texttt{swarm-epuck/controllers/botty/botty.py} and 
+\texttt{swarm-epuck/controllers/botty/stagnation.py}.
 
 \section{Implementating and evaluating the improvements}
 
