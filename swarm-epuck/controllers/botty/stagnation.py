@@ -10,7 +10,7 @@ class StagnationLayer(Layer):
 
     # OH YE LORDS OF THE UNIVERSE
     # BEHOLD THE UGLIEST CODE YOU HATH EVER SEEN
-    def act(self, proximities, lights, speed, previous_layer_did_suppress):
+    def act(self, proximities, lights, jolt, previous_layer_did_suppress):
         current_time = time.time()
 
         if self._stagnation_rem > 50:
@@ -26,7 +26,7 @@ class StagnationLayer(Layer):
             self._stagnation_rem -= 1
             return (1,  1,), True
 
-        if abs(speed[0]) < 1E-2 and abs(speed[1]) < 1E-2:
+        if abs(jolt[0]) < 1E-2 and abs(jolt[1]) < 1E-2:
             self._still_cnt += 1
         else:
             self._still_cnt = 0

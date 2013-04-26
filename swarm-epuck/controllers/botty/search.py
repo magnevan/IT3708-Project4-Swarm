@@ -26,6 +26,6 @@ class SearchLayer(Layer):
             self.ttc -= 1
             return self.motor
 
-    def act(self, proximities, lights, acceleration, previous_layer_did_suppress):
+    def act(self, proximities, lights, jolt, previous_layer_did_suppress):
         should_supress = False
         return self.find_speed(proximities), should_supress

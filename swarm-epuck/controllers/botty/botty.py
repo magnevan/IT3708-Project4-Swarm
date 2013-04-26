@@ -8,9 +8,9 @@ from retrival import RetrivalLayer
 from stagnation import StagnationLayer
 
 
-class AccelerationSamplingThread(threading.Thread):
+class JoltSamplingThread(threading.Thread):
     def __init__(self, epuck):
-        super(AccelerationSamplingThread, self).__init__()
+        super(JoltSamplingThread, self).__init__()
         self._epuck = epuck
         self._lock = threading.Lock()
         self._keep_len = 10
@@ -34,28 +34,28 @@ class AccelerationSamplingThread(threading.Thread):
                     self._last = temp_last[:]
                     temp_last = []
 
-    def get_speed(self):
+    def get_jolt(self):
         with self._lock:
             last = self._last[:]
 
         if not last:
             return (42, 42,)
 
-        v_xs = []
-        v_ys = []
+        j_xs = []
+        j_ys = []
 
         for (t0, (a0x, a0y,),), (t1, (a1x, a1y,),) in zip(last, last[1:]):
             dt = t1 - t0
-            v_x = (a1x - a0x) / dt
-            v_y = (a1y - a0y) / dt
-            v_xs.append(v_x)
-            v_ys.append(v_y)
+            j_x = (a1x - a0x) / dt
+            j_y = (a1y - a0y) / dt
+            j_xs.append(j_x)
+            j_ys.append(j_y)
 
 
-        v_x_mean = sum(v_xs) / len(v_xs)
-        v_y_mean = sum(v_ys) / len(v_ys)
+        j_x_mean = sum(j_xs) / len(j_xs)
+        j_y_mean = sum(j_ys) / len(j_ys)
 
-        return (v_x_mean, v_y_mean,)
+        return (j_x_mean, j_y_mean,)
 
 
 class Botty(epb.EpuckBasic):
@@ -69,8 +69,8 @@ class Botty(epb.EpuckBasic):
             StagnationLayer(),
         ]
 
-        self._acc_sampler = AccelerationSamplingThread(self)
-        self._acc_sampler.start()
+        self._jolt_sampler = JoltSamplingThread(self)
+        self._jolt_sampler.start()
 
     def run(self):
         while True:
@@ -79,18 +79,17 @@ class Botty(epb.EpuckBasic):
     def _tick(self):
         proximities = self.get_proximities()
         lights = self.get_lights()
-        acceleration = self.get_accelleration()
+        jolt = self._jolt_sampler.get_jolt()
 
         layer_actions = []
 
-        speed = self._acc_sampler.get_speed()
 
         # Run all layers
         for layer in self._layers:
             layer_actions.append(layer.act(
                 proximities,
                 lights,
-                speed,
+                jolt,
                 layer_actions[-1][1] if len(layer_actions) > 0 else None))
 
         # Chose output action
@@ -100,9 +99,9 @@ class Botty(epb.EpuckBasic):
                 output = proposed_output
 
         self.move_wheels(*output)
-        self._report(layer_actions, speed)
+        self._report(layer_actions, jolt)
 
-    def _report(self, layer_actions, speed):
+    def _report(self, layer_actions, jolt):
         debug_str = '    '.join([
             '[%-8.2f %-8.2f %-7s]' % (
                 left, right,
@@ -110,7 +109,7 @@ class Botty(epb.EpuckBasic):
             )
             for (left, right,), should_supress in layer_actions
         ])
-        debug_str += ' (%.2f %.2f) ' % speed
+        debug_str += ' (%.2f %.2f) ' % jolt
         print debug_str
 
 

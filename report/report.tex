@@ -68,10 +68,10 @@ architecture}~\cite{brooks1986}.  We have tested the
 \emph{e-pucks}~\cite{bonani2009} in a collaborative box-pushing task simulated
 in the Webots development environment.  
 
-The intended box pushing behavior draws inspiration from the swarm behaviour
-observed in ants during food retrieval.  The idea is to create a decentralized
-system invoking group behavior through simple mechanisms which if successful,
-leads to an emergent self-organized behaviour.
+The intended box pushing behavior is an example of swarm intelligence, drawing
+inspiration from the swarm behavior observed in ants during food retrieval.
+The idea is to create a decentralized system where advanced collective
+intelligence emerges through simple mechanisms.
 
 The rest of this report is structured as follows. In Section~\ref{sec:a1} we
 give a brief overview of our system (Deliverable A1).  Further, in
@@ -238,17 +238,17 @@ def _has_stagnated(self):
      light_observations,
      acceleration_observations) = zip(*self._prev_observations)
 
-    # See if proximity has changed in recent future
+    # See if proximity has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
            for i_sensor_obs in zip(*proximity_observations)):
         return False
 
-    # See if light has changed in recent future
+    # See if light has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
            for i_sensor_obs in zip(*light_observations)):
         return False
 
-    # See if acceleration has changed in recent future
+    # See if acceleration has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 0.1
            for i_sensor_obs in zip(*acceleration_observations)):
         return False
@@ -346,30 +346,26 @@ else:
     l_wheel_speed, r_wheel_speed = -.3, .3
 \end{python}
 
-\subsection{Derived speed to determine stagnation}
+\subsection{Using jolt to determine stagnation}
+Experimenting with our stagnation layer code, we found that the single most
+critical component in identifying stagnation was the lack of \emph{jolt}, that
+is, instantaneous change in acceleration. Of course, in theory there are many
+situations where the jolt is zero while a robot is definitely not stagnated,
+but we found that in simulation, jolt only stayed at zero for a longer period
+(+10 samples) when the bot was at standstill.  
 
-Our way of identifying stagnation was based upon non-changing sensor values.  
-However, in a large, messy, stagnated situation, with many bots surrounding 
-the target, there will always be some jostling between the bots. This makes 
-sure that the sensor values does not stay constant and thus preventing us from 
-correctly identifying stagnation.
+After this realization, we attempted to test an improved stagnation detection
+approach based only on observing jolt over small time intervals. We create a
+separate thread running a tight loop that constantly computes the mean
+jolt over a given set of acceleration samples. 
 
-Ideally, we would define stagnation as the act of trying to push a target, but 
-not changing position, IE. not having a speed. It so happens that we know the 
-acceleration of the bots and with the following formula we can derive the 
-speed of the bot.
-
-$$\int a \,\mathrm{d}t = v$$
-
-By creating a thread and constantly summarizing the experienced acceleration, 
-we can derive the speed of the bot and use it to determine whether the bot has 
-stagnated or not. As even the pseudo-code is rather large, we will not present 
-it here, but the actual code can be viewed in
-\texttt{swarm-epuck/controllers/botty/botty.py} and 
-\texttt{swarm-epuck/controllers/botty/stagnation.py}.
+Using the approximated jolt it is easy to determine whether the bot has
+stagnated or not. As even the pseudo-code for this alternative stagnation
+avoidance technique is
+rather large, we will not present it here, but the actual code can be viewed
+in \texttt{botty.py} and \texttt{stagnation.py}.
 
 \section{Implementing and evaluating the improvements}
-
 We tested our improvements over a number of runs, and not only did we eliminate
 all the unwanted behaviors  mentioned in section \ref{sec:part-a behavior}, we also managed 
 to get run-times to generally be below half a minutes (except in certain stress tests).
