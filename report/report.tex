@@ -23,8 +23,8 @@
 %\counterwithin{figure}{subsection}
 %\counterwithin{table}{subsection}
 
-\setlength{\parindent}{0.0in}
-\setlength{\parskip}{0.1in}
+%\setlength{\parindent}{0.0in}
+%\setlength{\parskip}{0.1in}
 
 \newcommand{\varopt}[1]{\textsc{#1}}
 \newcommand{\numbots}{4}
@@ -115,6 +115,11 @@ following changes to the simulation world:
 \subsection{E-puck control system}
 \label{sec:a2}
 
+We based our controller on the subsumption architecture that was used for
+CRABS~\cite{berg2011}. The most primitive layer deals with \emph{searching}
+the environment. The second layer is concerned with \emph{retrieval}. The most
+sophisticated layer deals with \emph{stagnation} during the retrieval task.
+
 \subsubsection{Behavior selection}
 The layer/behavior-selection component of a subsumption-based system can be
 implemented in many ways -- from ad-hoc solutions with explicit, highly
@@ -161,9 +166,6 @@ def act(self, proximities, lights, speed):
     # return two-tuple 
     # (output power), should_supress
 \end{python}
-
-We used the three-layer approach which was used for CRABS, and presented in
-the assignment text, but we rewrote each layer from scratch.
 
 \subsubsection{Search}
 The search layer is built as a simple state-based random explorer, which also
