@@ -238,17 +238,17 @@ def _has_stagnated(self):
      light_observations,
      acceleration_observations) = zip(*self._prev_observations)
 
-    # See if proximity has changed in recent future
+    # See if proximity has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
            for i_sensor_obs in zip(*proximity_observations)):
         return False
 
-    # See if light has changed in recent future
+    # See if light has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 150
            for i_sensor_obs in zip(*light_observations)):
         return False
 
-    # See if acceleration has changed in recent future
+    # See if acceleration has changed in recent past
     if any(abs(max(i_sensor_obs) - min(i_sensor_obs)) > 0.1
            for i_sensor_obs in zip(*acceleration_observations)):
         return False
